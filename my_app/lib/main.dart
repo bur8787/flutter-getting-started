@@ -1,53 +1,116 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(new MaterialApp(
-    home: new HomePage(),
-    routes: <String, WidgetBuilder>{
-      "/SecondPage": (BuildContext context) => SecondPage()
-    },
-  ));
-}
+void main() => runApp(new MyApp());
 
-class HomePage extends StatelessWidget {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-        appBar: new AppBar(
-            title: new Text("Home Page"), backgroundColor: Colors.deepOrange),
-        body: new Container(
-            child: new Center(
-                child: new Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-              new IconButton(
-                  icon: new Icon(Icons.favorite, color: Colors.redAccent),
-                  iconSize: 70.0,
-                  onPressed: () {
-                    Navigator.of(context).pushNamed("/SecondPage");
-                  }),
-              new Text("Home")
-            ]))));
+    var routes = <String, WidgetBuilder>{
+      MyItemsPage.routeName: (BuildContext context) => new MyItemsPage(title: "MyItemsPage"),
+    };
+    return new MaterialApp(
+      title: 'Flutter Demo',
+      theme: new ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: new MyHomePage(title: 'Flutter Demo Home Page'),
+      routes: routes,
+    );
   }
 }
 
-class SecondPage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key key, this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  MyHomePageState createState() => new MyHomePageState();
+}
+
+class MyHomePageState extends State<MyHomePage> {
+  int counter = 0;
+
+  void incrementCounter() {
+    Navigator.pushNamed(context, MyItemsPage.routeName);
+  }
+
   @override
   Widget build(BuildContext context) {
+    var button = new IconButton(icon: new Icon(Icons.access_alarm), onPressed: onButtonPressed);
     return new Scaffold(
-        appBar: new AppBar(
-            title: new Text("Second Page"), backgroundColor: Colors.deepOrange),
-        body: new Container(
-            child: new Center(
-                child: new Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-              new IconButton(
-                icon: new Icon(Icons.home, color: Colors.blue),
-                iconSize: 70.0,
-                onPressed: null,
-              ),
-              new Text("Second Page")
-            ]))));
+      appBar: new AppBar(
+        title: new Text(widget.title),
+      ),
+      body: new Column(
+        children: <Widget>[
+          new Text('Dog'),
+          new Text('Cat'),
+          button
+        ],
+      ),
+      floatingActionButton: new FloatingActionButton(
+        onPressed: incrementCounter,
+        tooltip: 'Increment',
+        child: new Icon(Icons.add),
+      ),
+    );
+  }
+
+  void onButtonPressed() {
+    Navigator.pushNamed(context, MyItemsPage.routeName);
+  }
+}
+
+class MyItemsPage extends StatefulWidget {
+  MyItemsPage({Key key, this.title}) : super(key: key);
+
+  static const String routeName = "/MyItemsPage";
+
+  final String title;
+
+  @override
+  MyItemsPageState createState() => new MyItemsPageState();
+}
+
+/// // 1. After the page has been created, register it with the app routes
+/// routes: <String, WidgetBuilder>{
+///   MyItemsPage.routeName: (BuildContext context) => new MyItemsPage(title: "MyItemsPage"),
+/// },
+///
+/// // 2. Then this could be used to navigate to the page.
+/// Navigator.pushNamed(context, MyItemsPage.routeName);
+///
+
+class MyItemsPageState extends State<MyItemsPage> {
+  @override
+  Widget build(BuildContext context) {
+    var button = new IconButton(icon: new Icon(Icons.arrow_back), onPressed: onButtonPressed);
+    return new Scaffold(
+      appBar: new AppBar(
+        title: new Text(widget.title),
+      ),
+      body: new Container(
+        child: new Column(
+          children: <Widget>[
+            new Text('Item1'),
+            new Text('Item2'),
+            button
+          ],
+        ),
+      ),
+      floatingActionButton: new FloatingActionButton(
+        onPressed: onFloatingActionButtonPressed,
+        tooltip: 'Add',
+        child: new Icon(Icons.add),
+      ),
+    );
+  }
+
+  void onFloatingActionButtonPressed() {
+  }
+
+  void onButtonPressed() {
+    Navigator.pop(context);
   }
 }
